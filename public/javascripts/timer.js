@@ -4,6 +4,12 @@ export class Timer {
 
     this.precision = 2
     this.type = '3x3'
+    this.types = [
+      '2x2',
+      '3x3',
+      '4x4',
+      'pyraminx',
+    ]
 
     this.useInspectionTime = true
     this.inspectionTimer = 0
@@ -126,6 +132,15 @@ export class Timer {
     }
 
     return best
+  }
+
+  scramble() {
+    if (this.state != stopped) throw 'can\'t scramble while solving'
+    fetch('scrambles/3x3').then(function (response) {
+      return response.json()
+    }).then(function (scramble) {
+      this.currentSolve.scramble = scramble
+    })
   }
 
   proceed() {

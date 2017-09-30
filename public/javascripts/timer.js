@@ -55,7 +55,7 @@ export class Timer {
 
   stopTimer() {
     clearInterval(this.interval)
-    this.currentSolve.time = this.timer - this.timer % (10**-3)
+    this.currentSolve.time = Math.round(this.timer*(10**3)) / (10**3)
     this.state = 'stopped'
     this.submit()
   }

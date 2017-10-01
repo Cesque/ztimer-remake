@@ -9,7 +9,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
   app = new Vue({
     el: '#app',
     data: {
-      timer: timer
+      timer: timer,
+      settings: {
+        useInspection: true,
+        hideTimerWhileSolving: false,
+        coloriseScramble: true,
+        nightMode: false
+      }
     }
   })
 });
@@ -23,9 +29,9 @@ document.addEventListener('keyup', (event) => {
     console.log(timer.solves)
   }
 
-  fetch('scrambles/3x3').then(function (response) {
-    return response.json()
-  }).then(function (scramble) {
-    console.log(scramble)
-  })
+  // fetch('scrambles/3x3').then(function (response) {
+  //   return response.json()
+  // }).then(function (scramble) {
+  //   console.log(scramble)
+  // })
 })

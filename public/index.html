@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,24 +11,30 @@
   <link rel="stylesheet" href="stylesheets/style.css">
   <title>Document</title>
 </head>
-<body>
-  <div id="app">
-    <div id="box-scramble"></div>
-    <div id="box-timer"></div>
-    <div id="box-stats"></div>
 
-    <p>{{ timer.inspectionTimer.toFixed(3) }} - {{ timer.timer.toFixed(3) }}</p>
-    <ul>
-      <li v-for="solve in timer.solves">
-        <span v-if="solve.dnf">
-          DNF
-        </span>
-        <span v-else>
-          {{ solve.time + solve.penalty }} <span v-if="solve.penalty > 0">(+{{solve.penalty}})</span>
-        </span>
-      </li>
-    </ul>
-    
+<body>
+  <div id="header"></div>
+  <div id="app">
+    <div id="box-scramble" class="box">
+      <div class="box-header">Scramble</div>
+      <div class="box-content"></div>
+    </div>
+    <div id="box-stats" class="box">
+      <div class="box-header">test</div>
+      <div class="box-content"></div>
+    </div>
+    <div id="box-timer" class="box">
+      <div class="box-content">
+        <span v-if="timer.state == 'inspection' && timer.inspectionTimer < 0" id="box-timer-text" class="box-timer-text-inspection box-timer-text-inspection-penalty">
+        +2
+      </span>
+        <span v-else-if="timer.state == 'inspection'" id="box-timer-text" class="box-timer-text-timer">
+        {{ timer.inspectionTimer.toFixed(3) }}
+      </span>
+        <span v-else id="box-timer-text" class="box-timer-text-inspection">{{ timer.timer.toFixed(3) }}</span>
+      </div>
+    </div>
   </div>
 </body>
+
 </html>

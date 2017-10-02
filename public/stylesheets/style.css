@@ -1,7 +1,7 @@
 body {
   background-color: #f8f8f8;
   color: #222222;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 #header {
@@ -12,7 +12,7 @@ body {
 #app {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: 120px 1fr;
+  grid-template-rows: minmax(120px,auto) 1fr;
   width: 60%;
   margin-left: auto;
   margin-right: auto;
@@ -54,6 +54,7 @@ body {
   border-right: 1px solid #e8e8e8;
   flex: auto;
   padding: 20px;
+  width: 100%;
 }
 
 .box-content:first-child {
@@ -66,9 +67,35 @@ body {
   grid-row: 1 / 1;
 }
 
+#scramble-text {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 #box-timer {
   grid-column: 1 / 1;
   grid-row: 2 / 2;
+}
+
+#box-timer > .box-content {
+  display: flex;
+  flex-direction: column;
+}
+
+#box-timer-top {
+  text-align: center;
+}
+
+#box-timer-bottom {
+  height: 50px;
+  background-color: #ff0000;
+}
+
+#box-timer-bottom > button {
+  float: right;
 }
 
 #box-timer-text {

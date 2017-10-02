@@ -15,6 +15,26 @@ document.addEventListener("DOMContentLoaded", function (event) {
         hideTimerWhileSolving: false,
         coloriseScramble: true,
         nightMode: false
+      },
+      turnColors: {
+        'U': '#9b59b6',
+        'U2': '#9b59b6',
+        'U\'': '#8e44ad',
+        'D': '#f1c40f',
+        'D2': '#f1c40f',
+        'D\'': '#f39c12',
+        'L': '#3498db',
+        'L2': '#3498db',
+        'L\'': '#2980b9',
+        'R': '#2ecc71',
+        'R2': '#2ecc71',
+        'R\'': '#27ae60',
+        'F': '#e74c3c',
+        'F2': '#e74c3c',
+        'F\'': '#c0392b',
+        'B': '#e67e22',
+        'B2': '#e67e22',
+        'B\'': '#d35400',    
       }
     }
   })
@@ -23,10 +43,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 document.addEventListener('keyup', (event) => {
   if (event.key == ' ') {
     event.preventDefault()
-
     timer.proceed()
-    console.log(timer.state)
-    console.log(timer.solves)
   }
 
   // fetch('scrambles/3x3').then(function (response) {

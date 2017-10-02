@@ -31,6 +31,8 @@ export class Timer {
       tags: [],
       comments: ''
     }
+
+    this.scramble()
   }
 
   resetCurrent() {
@@ -88,6 +90,7 @@ export class Timer {
   submit() {
     this.solves.push(this.currentSolve)
     this.resetCurrent()
+    this.scramble()
   }
 
   getAverageOfNAtIndex(n, index) {
@@ -135,11 +138,11 @@ export class Timer {
   }
 
   scramble() {
-    if (this.state != stopped) throw 'can\'t scramble while solving'
+    if (this.state != 'stopped') throw 'can\'t scramble while solving'
     fetch('scrambles/3x3').then(function (response) {
       return response.json()
-    }).then(function (scramble) {
-      this.currentSolve.scramble = scramble
+    }).then((scrambleInfo) => {
+      this.currentSolve.scramble = scrambleInfo.scrambles[0]
     })
   }
 

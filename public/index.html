@@ -8,6 +8,7 @@
   <script src="https://unpkg.com/vue"></script>
   <script type="module" src="javascripts/timer.js"></script>
   <script type="module" src="javascripts/index.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
   <link rel="stylesheet" href="stylesheets/style.css">
   <title>Document</title>
 </head>
@@ -17,7 +18,13 @@
   <div id="app">
     <div id="box-scramble" class="box">
       <div class="box-header">Scramble</div>
-      <div class="box-content"></div>
+      <div class="box-content">
+        <div id="scramble-text">
+          <span v-for="turn in timer.currentSolve.scramble.split(' ')" v-bind:style="{ color: settings.coloriseScramble ? turnColors[turn] : '' }">
+            {{ turn }}
+          </span>
+        </div>
+      </div>
     </div>
     <div id="box-stats" class="box">
       <div class="box-header">test</div>
@@ -25,15 +32,23 @@
     </div>
     <div id="box-timer" class="box">
       <div class="box-content">
-        <span v-if="timer.state == 'inspection' && timer.inspectionTimer < 0" id="box-timer-text" class="box-timer-text-inspection box-timer-text-inspection-penalty">
+        <div id="box-timer-top">
+          <span v-if="timer.state == 'inspection' && timer.inspectionTimer < 0" id="box-timer-text" class="box-timer-text-inspection box-timer-text-inspection-penalty">
         +2
       </span>
-        <span v-else-if="timer.state == 'inspection'" id="box-timer-text" class="box-timer-text-timer">
+          <span v-else-if="timer.state == 'inspection'" id="box-timer-text" class="box-timer-text-timer">
         {{ timer.inspectionTimer.toFixed(3) }}
       </span>
-        <span v-else id="box-timer-text" class="box-timer-text-inspection">{{ timer.timer.toFixed(3) }}</span>
+          <span v-else id="box-timer-text" class="box-timer-text-inspection">
+          {{ timer.timer.toFixed(3) }}
+        </span>
+        </div>
+        <div id="box-timer-bottom">
+          <button id="get-new-scramble" v-on:click="timer.scramble()">Scramble</button>
+        </div>
       </div>
     </div>
+  </div>
   </div>
 </body>
 

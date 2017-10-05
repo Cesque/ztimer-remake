@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         useInspection: true,
         hideTimerWhileSolving: false,
         coloriseScramble: true,
-        nightMode: false
+        nightMode: false,
+        coloriseAverages: true,
       },
       currentFocused: -1,
       turnColors: {
@@ -39,8 +40,43 @@ document.addEventListener("DOMContentLoaded", function (event) {
       }
     },
     methods: {
-      timeInfoRow: function(index) {
-        return Math.floor(index / 5) + " / " + Math.floor(index / 5)
+      timeCellBorders: function (index) {
+        let bg = 'rgba(255,255,255,0)'
+        if (this.settings.coloriseAverages == false) return bg
+
+
+        if (this.timer.solves.length >= 50) {
+          let bo50 = this.timer.averages.best.of50
+          if (index >= bo50.index && index < bo50.index + 50) {
+            bg = 'rgba(255,230,0,0.1)'
+          }
+        }
+
+        if (this.timer.solves.length >= 12) {
+          let bo12 = this.timer.averages.best.of12
+          if (index >= bo12.index && index < bo12.index + 12) {
+            bg = 'rgba(255,128,0,0.2)'
+          }
+        }
+
+        if (this.timer.solves.length >= 5) {
+          let bo5 = this.timer.averages.best.of5
+          if (index >= bo5.index && index < bo5.index + 5) {
+            bg = 'rgba(255,0,0,0.3)'
+          }
+        }
+
+        if (this.timer.solves.length >= 1) {
+          let bo1 = this.timer.averages.best.of1
+          if (index == bo1.index) {
+            bg = 'rgba(255,0,128,0.4)'
+          }
+        }
+
+        return {
+          'background-color': bg,
+          'font-weight': (this.currentFocused == index) ? 'bold' : 'normal'
+        }
       }
     }
   })

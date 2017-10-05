@@ -29,12 +29,48 @@
     <div id="box-stats" class="box">
       <div class="box-header">test</div>
       <div class="box-content">
-        <div id="session-info">{{currentFocused}}</div>       
+        <div id="session-info">
+          <ul>
+            <li id="best-time">
+              <span class="averages-header">Best solve:</span>
+              <span class="averages-data">{{timer.solves.length >= 1 ? timer.averages.best.of1.time : '-'}}</span>
+            </li>
+            <li><span class="averages-header"></span>Best:</span><ul>
+                <li id="bestAO5">
+                  <span class="averages-header">AO5:</span>
+                  <span class="averages-data">{{timer.solves.length >= 5 ? timer.averages.best.of5.time : '-'}}</span>
+                </li>
+                <li v-if="timer.solves.count >= 12" id="bestAO12">
+                  <span class="averages-header">AO12:</span>
+                  <span class="averages-data">{{timer.averages.best.of12.time}}</span>
+                </li>
+                <li v-if="timer.solves.count >= 50" id="bestAO50">
+                  <span class="averages-header">AO50:</span>
+                  <span class="averages-data">{{timer.averages.best.of50.time}}</span>
+                </li>
+              </ul></li>
+            <li><span class="averages-header"></span>Current:</span><ul>
+              <li id="currentAO5">
+                <span class="averages-header">AO5:</span>
+                <span class="averages-data">{{timer.solves.length >= 5 ? timer.averages.current.of5.time : '-'}}</span>
+              </li>
+              <li v-if="timer.solves.count >= 12" id="currentAO12">
+                <span class="averages-header">AO12:</span>
+                <span class="averages-data">{{timer.averages.current.of12.time}}</span>
+              </li>
+              <li v-if="timer.solves.count >= 50" id="currentAO50">
+                <span class="averages-header">AO50:</span>
+                <span class="averages-data">{{timer.averages.current.of50.time}}</span>
+              </li>
+            </ul></li>
+          </ul>
+        </div>       
         <div id="times-info">
           <div class="time"
           v-for="(solve, index) in timer.solves"
           v-bind:data-solve-index="index"
-          v-on:click="currentFocused = (currentFocused == index) ? -1 : index">
+          v-on:click="currentFocused = (currentFocused == index) ? -1 : index"
+          v-bind:style="timeCellBorders(index)">
             {{ solve.time + solve.penalty }}
           </div>
         </div>

@@ -20,7 +20,7 @@ export class Timer {
 
     this.interval = null
 
-    this.resolution = 10 //ms
+    this.resolution = 1 //ms
 
     this.currentSolve = {
       time: 0,
@@ -111,22 +111,23 @@ export class Timer {
   updateAverages() {
     this.averages = {
       current: {
-        5: this.getCurrentAverageOf(5),
-        12: this.getCurrentAverageOf(12),
-        50: this.getCurrentAverageOf(50),
+        of5: this.getCurrentAverageOf(5),
+        of12: this.getCurrentAverageOf(12),
+        of50: this.getCurrentAverageOf(50),
       },
       best: {
-        1: this.getBestAverageOf(1),
-        5: this.getBestAverageOf(5),
-        12: this.getBestAverageOf(12),
-        50: this.getBestAverageOf(50),
+        of1: this.getBestTime(),
+        of5: this.getBestAverageOf(5),
+        of12: this.getBestAverageOf(12),
+        of50: this.getBestAverageOf(50),
       }
     } 
   }
 
   getAverageOfNAtIndex(n, index) {
-    if (index + n >= this.solves.length) return null
-    let subsolves = this.solves.slice(-n)
+    if (index + n > this.solves.length) return null
+    let subsolves = this.solves.slice(index, index + n)
+    console.log(n, index, subsolves.length)
 
     let dnfs = this.solves.filter(x => x.dnf == true).length
     if(dnfs > 1) return 'dnf'
@@ -134,26 +135,28 @@ export class Timer {
     let count = 0
     let min = Infinity
     for (let i = 0; i < n; i++) {
-      let time = subsolves.time + subsolves.penalty
+      let time = subsolves[i].time + subsolves[i].penalty
       count += time
       if(time < min) min = time
     }
 
     count -= min
-    return count/(n-1)
+    return Math.round(count/(n-1)*(10**3)) / (10**3)
   }
 
   getCurrentAverageOf(n) {
-    return this.getAverageOfNAtIndex(n, this.solves.length - (n + 1))
+    if (n > this.solves.length) return null
+    return this.getAverageOfNAtIndex(n, this.solves.length - n)
   }
 
   getBestAverageOf(n) {
+    if (n > this.solves.length) return null
     let best = {
       index: -1,
       time: Infinity
     }
 
-    for (let i = 0; i < this.solves.length - n - 1; i++) {
+    for (let i = 0; i <= this.solves.length - n; i++) {
       let average = this.getAverageOfNAtIndex(n, i)
       if (best.time == Infinity && average == 'dnf') {
         best.index = i
@@ -162,6 +165,27 @@ export class Timer {
       if (average < best.time || best.time == 'dnf') {
         best.index = i
         best.time = average  
+      }
+    }
+
+    return best
+  }
+
+  getBestTime() {
+    let best = {
+      index: -1,
+      time: Infinity
+    }
+
+    for (var i = 0; i < this.solves.length; i++) {
+      let solve = this.solves[i];
+      if (best.time == Infinity && solve.dnf) {
+        best.index = i
+        best.time = 'dnf'
+      }
+      if ((solve.time + solve.penalty) < best.time || best.time == 'dnf') {
+        best.index = i
+        best.time = (solve.time + solve.penalty) 
       }
     }
 

@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         coloriseScramble: true,
         nightMode: false
       },
+      currentFocused: -1,
       turnColors: {
         'U': '#9b59b6',
         'U2': '#9b59b6',
@@ -34,7 +35,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
         'F\'': '#c0392b',
         'B': '#e67e22',
         'B2': '#e67e22',
-        'B\'': '#d35400',    
+        'B\'': '#d35400',
+      }
+    },
+    methods: {
+      timeInfoRow: function(index) {
+        return Math.floor(index / 5) + " / " + Math.floor(index / 5)
       }
     }
   })

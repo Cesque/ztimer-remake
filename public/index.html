@@ -28,7 +28,23 @@
     </div>
     <div id="box-stats" class="box">
       <div class="box-header">test</div>
-      <div class="box-content"></div>
+      <div class="box-content">
+        <div id="session-info">{{currentFocused}}</div>       
+        <div id="times-info">
+          <div class="time"
+          v-for="(solve, index) in timer.solves"
+          v-bind:data-solve-index="index"
+          v-on:click="currentFocused = (currentFocused == index) ? -1 : index">
+            {{ solve.time + solve.penalty }}
+          </div>
+        </div>
+        <div v-if="currentFocused > -1" id="solve-info">
+          <div id="test">hello world</div>
+        </div>
+        <div v-else id="solve-info">
+
+        </div>
+      </div>
     </div>
     <div id="box-timer" class="box">
       <div class="box-content">

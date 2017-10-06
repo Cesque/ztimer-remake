@@ -10,8 +10,8 @@ export class Timer {
       '4x4',
       'pyraminx',
     ]
-    this.oh = true;
-    this.bld = true;
+    this.oh = false;
+    this.bld = false;
 
     this.useInspectionTime = true
     this.inspectionTimer = 0

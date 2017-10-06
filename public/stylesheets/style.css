@@ -7,8 +7,42 @@ body {
 }
 
 #header {
-  height: 50px;
+  height: 70px;
   width: 100vw;
+  margin-bottom: 50px;
+  background-color: #34495e;
+  display: flex;
+  flex-direction: row;
+}
+
+#header > div {
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0px 20px;
+  color: #ffffff;
+  font-size: 2em;
+}
+
+#header > #header-page-tagline {
+  font-weight: 300;
+  color: rgba(88,214,255,0.4);
+}
+
+#header > #header-page-by {
+  color: rgba(88,214,255,0.4);
+}
+
+#header-page-by > a {
+  color: #ffffff;
+  text-decoration: none;
+}
+#header-page-by > a > #link-inside {
+  color: #ffffff;
+  text-decoration-skip: ink;
+  text-decoration: underline;
+  text-decoration-color: rgba(88,214,255,0.4);
 }
 
 #app {

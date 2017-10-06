@@ -92,16 +92,59 @@ body {
 }
 
 #box-timer-bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   height: 50px;
-  background-color: #ff0000;
 }
 
-#box-timer-bottom > button {
-  float: right;
+#box-timer-bottom > div {
+  width: 100%;
+  background-color: #f8f8f8;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#get-new-scramble {
+  font-family: 'Open Sans', sans-serif;
+  background-color: rgba(0,0,0,0);
+  color: #00c0ff;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#get-new-scramble:focus {
+  outline:0;
+}
+
+#get-new-scramble:hover {
+  background-color: #eeeeee;
+}
+
+#get-new-scramble:active {
+  background-color: #00c0ff;
+  color: #ffffff;
 }
 
 #box-timer-text {
   font-size: 5em;
+}
+
+.box-timer-text-inspection {
+  
+}
+
+.box-timer-text-timer {
+  
+}
+
+.box-timer-text-inspection-penalty {
+  color: #ff0000
 }
 
 #box-stats {
@@ -111,6 +154,24 @@ body {
 
 #box-stats > .box-content {
   padding: 0px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.list-header {
+  margin-right: 10px;
+  color: #aaaaaa;
+}
+
+.list-data {
+  font-weight: 600;
+}
+
+.list-data-empty {
+  color: #aaaaaa;
 }
 
 #times-info {
@@ -125,16 +186,67 @@ body {
 }
 
 #solve-info {
-  border-top: 1px solid #aaaaaa;
-  background-color: #cccccc; 
+  border-top: 1px solid #cccccc;
+  background-color: #eeeeee; 
   padding: 10px 20px;
-  min-height: 30px;
+}
+
+#solve-info-scramble {
+  min-height: 50px;
+}
+
+#solve-buttons {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#solve-buttons > button {
+  font-family: 'Open Sans', sans-serif;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#solve-buttons > button:focus {
+  outline: none;
+}
+
+#solve-buttons-delete {
+  background-color: #e74c3c;
+}
+#solve-buttons-delete:hover {
+  background-color: #c0392b;
+}
+#solve-buttons-delete:active {
+  color: #e74c3c;
+  background-color: #ffffff;
+}
+
+#solve-buttons-penalty {
+  background-color: #9b59b6;
+}
+#solve-buttons-penalty:hover {
+  background-color: #8e44ad;
+}
+#solve-buttons-penalty:active {
+  color: #9b59b6;
+  background-color: #ffffff;
 }
 
 #session-info {
   border-bottom: 1px solid #eeeeee;
   margin: 0px 20px;
   padding: 10px 0px;
+}
+
+.averages-data {
+  text-transform: uppercase;
 }
 
 .time {

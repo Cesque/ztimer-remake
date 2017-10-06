@@ -10,9 +10,12 @@ export class Timer {
       '4x4',
       'pyraminx',
     ]
+    this.oh = true;
+    this.bld = true;
 
     this.useInspectionTime = true
     this.inspectionTimer = 0
+    this.inspectionTimerStart = 0
 
     this.timer = 0.0
 
@@ -20,15 +23,19 @@ export class Timer {
 
     this.interval = null
 
-    this.resolution = 1 //ms
+    this.resolution = 11 //ms
 
     this.currentSolve = {
       time: 0,
       penalty: 0,
       dnf: false,
-      type: '',
+      type: this.type,
       scramble: '',
-      tags: [],
+      oh: this.oh,
+      bld: this.bld,
+      get calculatedTime() {
+        return Math.floor((this.time + this.penalty)*(10**3)) / (10**3)
+      }
     }
 
     this.scrambles = []
@@ -56,8 +63,12 @@ export class Timer {
       penalty: 0,
       dnf: false,
       type: this.type,
-      scramble: '',
-      tags: [],
+      scramble: [],
+      oh: this.oh,
+      bld: this.bld,
+      get calculatedTime() {
+        return Math.floor((this.time + this.penalty)*(10**3)) / (10**3)
+      }
     }
   }
 
@@ -66,6 +77,7 @@ export class Timer {
     this.state = 'inspection'
     this.inspectionTimer = 15
     this.interval = setInterval(this.update.bind(this), this.resolution)
+    this.inspectionTimerStart = Date.now()
   }
 
   startTimer() {
@@ -77,7 +89,7 @@ export class Timer {
 
   stopTimer() {
     clearInterval(this.interval)
-    this.currentSolve.time = Math.round(this.timer*(10**3)) / (10**3)
+    this.currentSolve.time = Math.round(this.timer * (10 ** 3)) / (10 ** 3)
     this.state = 'stopped'
     this.submit()
   }
@@ -86,18 +98,16 @@ export class Timer {
     if (this.state == 'stopped') {
       return false
     } else if (this.state == 'inspection') {
-      this.inspectionTimer -= this.resolution/1000
-      if (this.inspectionTimer <= -2) {
+      this.inspectionTimer = (Date.now() - this.inspectionTimerStart) / 1000
+        if(this.inspectionTimer > 17) {
         this.currentSolve.dnf = true
-        this.currentSolve.time = 0
-        this.currentSolve.penalty = 0
         this.stopTimer()
       } 
-      else if (this.inspectionTimer <= 0) {
+      else if (this.inspectionTimer > 15) {
         this.currentSolve.penalty = +2
       }
     } else if (this.state == 'solving') {
-      this.timer += this.resolution/1000
+      this.timer += this.resolution / 1000
     }
   }
 
@@ -121,27 +131,26 @@ export class Timer {
         of12: this.getBestAverageOf(12),
         of50: this.getBestAverageOf(50),
       }
-    } 
+    }
   }
 
   getAverageOfNAtIndex(n, index) {
     if (index + n > this.solves.length) return null
     let subsolves = this.solves.slice(index, index + n)
-    console.log(n, index, subsolves.length)
 
     let dnfs = this.solves.filter(x => x.dnf == true).length
-    if(dnfs > 1) return 'dnf'
+    if (dnfs > 1) return 'dnf'
 
     let count = 0
     let min = Infinity
     for (let i = 0; i < n; i++) {
-      let time = subsolves[i].time + subsolves[i].penalty
+      let time = subsolves[i].calculatedTime
       count += time
-      if(time < min) min = time
+      if (time < min) min = time
     }
 
     count -= min
-    return Math.round(count/(n-1)*(10**3)) / (10**3)
+    return Math.round(count / (n - 1) * (10 ** 3)) / (10 ** 3)
   }
 
   getCurrentAverageOf(n) {
@@ -164,7 +173,7 @@ export class Timer {
       }
       if (average < best.time || best.time == 'dnf') {
         best.index = i
-        best.time = average  
+        best.time = average
       }
     }
 
@@ -183,9 +192,9 @@ export class Timer {
         best.index = i
         best.time = 'dnf'
       }
-      if ((solve.time + solve.penalty) < best.time || best.time == 'dnf') {
+      if (solve.calculatedTime < best.time || best.time == 'dnf') {
         best.index = i
-        best.time = (solve.time + solve.penalty) 
+        best.time = solve.calculatedTime
       }
     }
 
@@ -199,7 +208,7 @@ export class Timer {
         return response.json()
       }).then((scrambleInfo) => {
         console.log('got 12 new scrambles')
-        this.scrambles = scrambleInfo.scrambles
+        this.scrambles = scrambleInfo.scrambles.map(x => x.split(' '))
         this.currentSolve.scramble = this.scrambles.pop()
       })
     } else {
@@ -217,7 +226,7 @@ export class Timer {
           this.startTimer()
         }
         break
-      case 'inspection': 
+      case 'inspection':
         this.startTimer()
         break
       case 'solving':

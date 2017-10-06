@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       }
     },
     methods: {
-      timeCellBorders: function (index) {
+      timeCellStyle: function (index) {
         let bg = 'rgba(255,255,255,0)'
         if (this.settings.coloriseAverages == false) return bg
 
@@ -55,14 +55,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if (this.timer.solves.length >= 12) {
           let bo12 = this.timer.averages.best.of12
           if (index >= bo12.index && index < bo12.index + 12) {
-            bg = 'rgba(255,128,0,0.2)'
+            bg = 'rgba(255,128,0,0.1)'
           }
         }
 
         if (this.timer.solves.length >= 5) {
           let bo5 = this.timer.averages.best.of5
           if (index >= bo5.index && index < bo5.index + 5) {
-            bg = 'rgba(255,0,0,0.3)'
+            bg = 'rgba(255,0,0,0.2)'
           }
         }
 
@@ -75,8 +75,36 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         return {
           'background-color': bg,
-          'font-weight': (this.currentFocused == index) ? 'bold' : 'normal'
+          'font-weight': this.currentFocused == index ? 'bold' : 'normal',
+          'color': this.timer.solves[index].dnf ? '#e74c3c' : '',
         }
+      },
+      inspectionTimerColor: function () {
+        let color = lerpColor('#3498db', '#9b59b6', timer.inspectionTimer / 15)
+        return {
+          color: color
+        }
+      },
+      deleteSolve: function () {
+        if (this.currentFocused == -1) return
+        timer.solves.splice(this.currentFocused, 1)
+        timer.updateAverages()
+        this.currentFocused = -1
+      },
+      cyclePenalty: function () {
+        if (this.currentFocused == -1) return
+        let solve = timer.solves[this.currentFocused]
+        if (solve.dnf) {
+          solve.dnf = false
+          solve.penalty = 0
+        } else if (solve.penalty == +2) {
+          solve.penalty = 0
+          solve.dnf = true
+        } else {
+          solve.dnf = false
+          solve.penalty = +2
+        }
+        timer.updateAverages()
       }
     }
   })
@@ -87,10 +115,17 @@ document.addEventListener('keyup', (event) => {
     event.preventDefault()
     timer.proceed()
   }
-
-  // fetch('scrambles/3x3').then(function (response) {
-  //   return response.json()
-  // }).then(function (scramble) {
-  //   console.log(scramble)
-  // })
 })
+
+// from https://gist.github.com/rosszurowski/67f04465c424a9bc0dae
+function lerpColor(a, b, amount) {
+  var ah = parseInt(a.replace(/#/g, ''), 16),
+    ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+    bh = parseInt(b.replace(/#/g, ''), 16),
+    br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+    rr = ar + amount * (br - ar),
+    rg = ag + amount * (bg - ag),
+    rb = ab + amount * (bb - ab);
+
+  return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+}

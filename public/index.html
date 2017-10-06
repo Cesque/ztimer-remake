@@ -20,83 +20,134 @@
       <div class="box-header">Scramble</div>
       <div class="box-content">
         <div id="scramble-text">
-          <span v-for="turn in timer.currentSolve.scramble.split(' ')" v-bind:style="{ color: settings.coloriseScramble ? turnColors[turn] : '' }">
+          <span v-for="turn in timer.currentSolve.scramble" v-bind:style="{ color: settings.coloriseScramble ? turnColors[turn] : '' }">
             {{ turn }}
           </span>
-        </div>
-      </div>
-    </div>
-    <div id="box-stats" class="box">
-      <div class="box-header">test</div>
-      <div class="box-content">
-        <div id="session-info">
-          <ul>
-            <li id="best-time">
-              <span class="averages-header">Best solve:</span>
-              <span class="averages-data">{{timer.solves.length >= 1 ? timer.averages.best.of1.time : '-'}}</span>
-            </li>
-            <li><span class="averages-header"></span>Best:</span><ul>
-                <li id="bestAO5">
-                  <span class="averages-header">AO5:</span>
-                  <span class="averages-data">{{timer.solves.length >= 5 ? timer.averages.best.of5.time : '-'}}</span>
-                </li>
-                <li v-if="timer.solves.count >= 12" id="bestAO12">
-                  <span class="averages-header">AO12:</span>
-                  <span class="averages-data">{{timer.averages.best.of12.time}}</span>
-                </li>
-                <li v-if="timer.solves.count >= 50" id="bestAO50">
-                  <span class="averages-header">AO50:</span>
-                  <span class="averages-data">{{timer.averages.best.of50.time}}</span>
-                </li>
-              </ul></li>
-            <li><span class="averages-header"></span>Current:</span><ul>
-              <li id="currentAO5">
-                <span class="averages-header">AO5:</span>
-                <span class="averages-data">{{timer.solves.length >= 5 ? timer.averages.current.of5.time : '-'}}</span>
-              </li>
-              <li v-if="timer.solves.count >= 12" id="currentAO12">
-                <span class="averages-header">AO12:</span>
-                <span class="averages-data">{{timer.averages.current.of12.time}}</span>
-              </li>
-              <li v-if="timer.solves.count >= 50" id="currentAO50">
-                <span class="averages-header">AO50:</span>
-                <span class="averages-data">{{timer.averages.current.of50.time}}</span>
-              </li>
-            </ul></li>
-          </ul>
-        </div>       
-        <div id="times-info">
-          <div class="time"
-          v-for="(solve, index) in timer.solves"
-          v-bind:data-solve-index="index"
-          v-on:click="currentFocused = (currentFocused == index) ? -1 : index"
-          v-bind:style="timeCellBorders(index)">
-            {{ solve.time + solve.penalty }}
-          </div>
-        </div>
-        <div v-if="currentFocused > -1" id="solve-info">
-          <div id="test">hello world</div>
-        </div>
-        <div v-else id="solve-info">
-
         </div>
       </div>
     </div>
     <div id="box-timer" class="box">
       <div class="box-content">
         <div id="box-timer-top">
-          <span v-if="timer.state == 'inspection' && timer.inspectionTimer < 0" id="box-timer-text" class="box-timer-text-inspection box-timer-text-inspection-penalty">
-        +2
-      </span>
-          <span v-else-if="timer.state == 'inspection'" id="box-timer-text" class="box-timer-text-timer">
-        {{ timer.inspectionTimer.toFixed(3) }}
-      </span>
-          <span v-else id="box-timer-text" class="box-timer-text-inspection">
-          {{ timer.timer.toFixed(3) }}
-        </span>
+          <span v-if="timer.state == 'inspection' && timer.currentSolve.penalty > 0" id="box-timer-text" class="box-timer-text-inspection box-timer-text-inspection-penalty">
+            +2
+          </span>
+          <span v-else-if="timer.state == 'inspection'" v-bind:style="inspectionTimerColor()" id="box-timer-text" class="box-timer-text-inspection">
+            {{ (15 - timer.inspectionTimer).toFixed(3) }}
+          </span>
+          <span v-else id="box-timer-text" class="box-timer-text-timer">
+            {{ timer.timer.toFixed(3) }}
+          </span>
         </div>
         <div id="box-timer-bottom">
-          <button id="get-new-scramble" v-on:click="timer.scramble()">Scramble</button>
+          <div id="get-new-scramble-box">
+            <button id="get-new-scramble" v-on:click="timer.scramble()">Scramble</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="box-stats" class="box">
+      <div class="box-header">Stats</div>
+      <div class="box-content">
+        <div id="session-info">
+          <ul>
+            <li id="best-time">
+              <span class="averages-header list-header">Best solve:</span>
+              <span v-if="timer.solves.length >= 1" class="averages-data list-data">{{timer.averages.best.of1.time}}</span>
+              <span v-else class="averages-data list-data list-data-empty">—</span>
+            </li>
+            <li><span class="averages-header list-header">Best:</span>
+              <ul>
+                <li id="bestAO5">
+                  <span class="averages-header list-header">AO5:</span>
+                  <span v-if="timer.solves.length >= 5" class="averages-data list-data">{{timer.averages.best.of5.time}}</span>
+                  <span v-else class="averages-data list-data list-data-empty">—</span>
+                </li>
+                <li v-if="timer.solves.length >= 12" id="bestAO12">
+                  <span class="averages-header list-header">AO12:</span>
+                  <span class="averages-data list-data">{{timer.averages.best.of12.time}}</span>
+                </li>
+                <li v-if="timer.solves.length >= 50" id="bestAO50">
+                  <span class="averages-header list-header">AO50:</span>
+                  <span class="averages-data list-data">{{timer.averages.best.of50.time}}</span>
+                </li>
+              </ul>
+            </li>
+            <li><span class="averages-header list-header">Current:</span>
+              <ul>
+                <li id="currentAO5">
+                  <span class="averages-header list-header">AO5:</span>
+                  <span v-if="timer.solves.length >= 5" class="averages-data list-data">{{timer.averages.current.of5.time}}</span>
+                  <span v-else class="averages-data list-data list-data-empty">—</span>
+                </li>
+                <li v-if="timer.solves.length >= 12" id="currentAO12">
+                  <span class="averages-header list-header">AO12:</span>
+                  <span class="averages-data list-data">{{timer.averages.current.of12.time}}</span>
+                </li>
+                <li v-if="timer.solves.length >= 50" id="currentAO50">
+                  <span class="averages-header list-header">AO50:</span>
+                  <span class="averages-data list-data">{{timer.averages.current.of50.time}}</span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div id="times-info">
+          <div class="time"
+            v-for="(solve, index) in timer.solves"
+            v-bind:data-solve-index="index"
+            v-on:click="currentFocused = (currentFocused == index) ? -1 : index"
+            v-bind:style="timeCellStyle(index)">
+            {{ solve.dnf ? 'DNF' : solve.calculatedTime.toFixed(3) }}{{ solve.penalty > 0 ? '+' : '' }}
+          </div>
+        </div>
+        <div id="solve-info">
+          <ul>
+            <li id="solve-info-index">
+              <span class="solve-info-header list-header">Index:</span>
+              <span v-if="currentFocused > -1" class="solve-info-data list-data">{{ currentFocused }}</span>
+              <span v-else class="solve-info-data solve-info-data-empty list-data list-data-empty">—</span>
+            </li>
+            <li id="solve-info-time">
+              <span class="solve-info-header list-header">Time:</span>
+              <span v-if="currentFocused > -1" class="solve-info-data list-data">{{ timer.solves[currentFocused].calculatedTime.toFixed(3) }}</span>
+              <span v-else class="solve-info-data solve-info-data-empty list-data list-data-empty">—</span>
+            </li>
+            <li id="solve-info-penalty">
+                <span class="solve-info-header list-header">Penalty:</span>
+                <span v-if="currentFocused > -1" class="solve-info-data list-data">{{ timer.solves[currentFocused].penalty == +2 ? '+2' : 0 }}</span>
+                <span v-else class="solve-info-data solve-info-data-empty list-data list-data-empty">—</span>
+            </li>
+            <li id="solve-info-dnf">
+              <span class="solve-info-header list-header">DNF:</span>
+              <span v-if="currentFocused > -1" class="solve-info-data list-data">{{ timer.solves[currentFocused].dnf ? 'Yes' : 'No' }}</span>
+              <span v-else class="solve-info-data solve-info-data-empty list-data list-data-empty">—</span>
+            </li>
+            <li id="solve-info-type">
+              <span class="solve-info-header list-header">Type:</span>
+              <span v-if="currentFocused > -1" class="solve-info-data list-data">
+                <span>{{ timer.solves[currentFocused].type }}</span>
+                <span id="solve-type-oh" class="solve-type-add" v-if="timer.solves[currentFocused].oh">OH</span>
+                <span id="solve-type-bld" class="solve-type-add" v-if="timer.solves[currentFocused].bld">BLD</span>
+              </span>
+              <span v-else class="solve-info-data solve-info-data-empty list-data list-data-empty">—</span>
+            </li>
+            <li id="solve-info-scramble">
+              <span class="solve-info-header list-header">Scramble:</span>
+              <span v-if="currentFocused > -1" class="solve-info-data list-data">
+                <span class="solve-info-scramble-part"
+                v-for="turn in timer.solves[currentFocused].scramble"
+                v-bind:style="{color: settings.coloriseScramble ? turnColors[turn] : ''}">
+                  {{ turn }}
+                </span>
+              </span>
+              <span v-else class="solve-info-data solve-info-data-empty list-data list-data-empty">—</span>
+            </li>
+          </ul>
+          <div id="solve-buttons">
+            <button v-on:click="deleteSolve" id="solve-buttons-delete">Delete</button>
+            <button v-on:click="cyclePenalty" id="solve-buttons-penalty">Penalty</button>
+          </div>
         </div>
       </div>
     </div>

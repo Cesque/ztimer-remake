@@ -108,13 +108,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   })
-});
 
-document.addEventListener('keyup', (event) => {
-  if (event.key == ' ') {
-    event.preventDefault()
+  document.addEventListener('keyup', (event) => {
+    if (event.key == ' ') {
+      event.preventDefault()
+      timer.proceed()
+    }
+  })
+
+  document.querySelector('#box-timer-top').addEventListener('click', () => {
     timer.proceed()
-  }
+  })
 })
 
 // from https://gist.github.com/rosszurowski/67f04465c424a9bc0dae
